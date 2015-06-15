@@ -1,0 +1,102 @@
+*flagship.txt*  Continuously updated session files
+
+Author:  Tim Pope <http://tpo.pe/>
+Repo:    https://github.com/tpope/vim-flagship
+License: Same terms as Vim itself (see |license|)
+
+SETUP                                           *flagship*
+
+While not strictly required, the following options are highly recommended:
+>
+  set laststatus=2
+  set showtabline=2
+  set guioptions-=e
+<
+                                *g:tablabel* *g:tabprefix* *g:tabsuffix*
+The default status line is a slightly tweaked version of Vim's default.  To
+override it, :setglobal 'statusline' as usual.  Vim's default tab label is
+difficult to reproduce (and in this humble plugin artist's opinion, not very
+useful), so the default is instead based around the tab's current working
+directories.  To override it, assign |g:tablabel|.  If you are not using the
+GUI tabline, you can also assign |g:tabprefix| and |g:tabsuffix| to control
+the content before and after the tabs themselves.  The defaults are shown
+below:
+>
+  let g:tabprefix = '%{flagship#id()}'
+  let g:tablabel =
+        \ "%N%{flagship#tabmodified()} %{flagship#tabcwds('shorten',',')}"
+
+If you adjust none of these configuration options, Flagship assumes you want
+the preferred setup, and will automatically set the 3 options listed at the
+top of this section.
+
+EXTENSION                                       *flagship-Hoist()*
+
+The function Hoist() is may be called from from a User Flags autocommand to
+register a flag:
+>
+    autocmd User Flags call Hoist({scope}, ..., {flag})
+<
+The exact arguments to Hoist are covered in order below.
+
+The first argument is the scope and must be one of the following:
+
+There are four supported scopes:
+
+Flag        Default display position ~
+"buffer"    left of the status line split
+"window"    right of the status line split
+"tab"       end of the tab label
+"global"    end of the tab prefix
+
+Generally you will want to use "buffer" or "global".  The "window" scope is
+for aspects of the window independent of the buffer itself, for example the
+cursor position or whether diff mode is enabled.  Since these window
+properties typically have a visual presence, use of a flag is often redundant
+and unnecessary.
+
+Next comes the position argument, which defaults to 0 (zero) and can almost
+always be omitted.  If you have a flag that is particularly volatile, try
+giving a positive number like 10 to sort it later.  If on the other hand it
+very rarely changes, you might consider a negative number like -10 to sort it
+earlier.
+
+After that comes an optional dictionary of options.  The only currently
+supported option is the experimental "hl", which names a highlight group to
+use for the flag.  (Tip: re-add a plugin flag with a "hl" of "Ignore" in your
+vimrc to disable it.)
+
+Finally comes the flag itself, one of the following:
+
+- A function reference
+- A string naming a function
+- A format string containing one or more % statusline expressions
+
+For the first two, the function will be called from a %{} expression with zero
+arguments, but this is not guaranteed: use |...| for future compatibility.
+The result of the function will be wrapped in brackets if it isn't already.
+Future versions may allow customizing the wrapping characters.
+
+The % statusline format is not recommended for plugin use, but can be used for
+a quick and dirty flag definition in one's vimrc.  For example, to show a
+global indicator when 'ignorecase' is set:
+>
+  autocmd User Flags call Hoist("global", "%{&ic?'[ic]':''}")
+<
+If you are implementing your own statusline plugin, you may implement this
+same interface to tap into the existing ecosystem of flags.  This is the basic
+technique:
+>
+  try
+    function! Hoist(...) abort
+      " Your implementation
+    endfunction
+    doautocmd <nomodeline> User Flags
+  finally
+    delfunction Hoist
+  endtry
+<
+Make sure your implementation of Hoist() ignores unrecognized arguments and
+never throws an exception, for future compatibility.
+
+ vim:tw=78:et:ft=help:norl:

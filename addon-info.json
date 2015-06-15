@@ -1,0 +1,11 @@
+{
+  "vim_script_nr": 5199,
+  "name": "flagship",
+  "version": "1.0",
+  "author": "Tim Pope <http://tpo.pe/>",
+  "repository" : {
+    "type": "git",
+    "url": "git://github.com/tpope/vim-flagship.git"
+  },
+  "description": "Configurable and extensible tab line and status line"
+}
