@@ -1,7 +1,7 @@
 # flagship.vim
 
 Flagship provides a Vim status line and tab line that are both easily
-customizable by the user, and extensible by other plugins.
+customizable by the user and extensible by other plugins.
 
 ## Installation
 
