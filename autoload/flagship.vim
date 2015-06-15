@@ -413,7 +413,7 @@ function! flagship#hoist(type, ...) abort
     let s:new_flags[a:type] = []
   endif
   let flags = s:new_flags[a:type]
-  let index = index(map(copy(flags), 'v:val[1]'), args[2])
+  let index = index(map(copy(flags), 'v:val[1]'), args[1])
   if index < 0
     call add(flags, args)
   else
