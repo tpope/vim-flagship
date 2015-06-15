@@ -390,7 +390,7 @@ function! flagship#statusline(...) abort
   return substitute(s, '%=', '\=s:flags("file").s:flags("buffer")."%=".s:flags("window",-1)', '')
 endfunction
 
-function! flagship#hoist(type, ...) abort
+function! flagship#_hoist(type, ...) abort
   if type(a:type) != type('') || a:type !~# '^[a-z]'
     return
   endif
@@ -506,7 +506,7 @@ function! flagship#setup(...) abort
   let modelines = &modelines
   try
     let &modelines = 0
-    let g:Hoist = function('flagship#hoist')
+    let g:Hoist = function('flagship#_hoist')
     function! Hoist(...) abort
       return call(g:Hoist, a:000)
     endfunction
