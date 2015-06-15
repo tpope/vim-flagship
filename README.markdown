@@ -37,7 +37,7 @@ remove the plugin), it will be skipped.  Here's a couple of mine:
     autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
     autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
 
-## Configuration
+## Customization
 
 The extension API is great for adding flags, but what if you want to change
 the core content?  For the status line, Vim already provides a perfectly
