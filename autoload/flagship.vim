@@ -196,9 +196,6 @@ function! flagship#cwd(...) abort
   while type(get(args, 0, '')) == type(0)
     call remove(args, 0)
   endwhile
-  if exists('buf') && index(args, 'url') >= 0 && buf =~# '^zipfile:'
-    let path = substitute(buf, '^zipfile:\|::.*', '', 'g')
-  endif
   if index(args, 'raw') < 0
     let path = s:cwdpresent(path, index(args, 'relative') >= 0)
   endif
