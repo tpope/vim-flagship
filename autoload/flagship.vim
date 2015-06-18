@@ -215,12 +215,23 @@ function! flagship#tabcwds(...) abort
   let path = []
   for t in tabnr ? [tabnr] : range(1, tabpagenr('$'))
     let types = map(tabpagebuflist(t), 'getbufvar(v:val, "&buftype")')
-    let all_typed = empty(filter(copy(types), 'empty(v:val)'))
+    let untyped = len(filter(copy(types), 'empty(v:val)'))
     for w in range(1, tabpagewinnr(t, '$'))
-      if empty(types[w-1]) || all_typed
+      if empty(types[w-1]) || !untyped
         call add(path, call('flagship#cwd', [t, w] + args))
       endif
     endfor
+    if untyped < 2
+      let file = bufname(tabpagebuflist(t)[tabpagewinnr(t)-1])
+      if file !~# ':[\/]\|^$'
+        let file = fnamemodify(file, ':p')
+      endif
+      let cwd = gettabwinvar(t, tabpagewinnr(t), 'flagship_cwd')
+      let cwd = (empty(cwd) ? gcwd : cwd) . s:slash()
+      if strpart(file, 0, len(cwd)) ==# cwd
+        let path[-1] .= pathshorten(file[len(cwd)-1 : -1])
+      endif
+    endif
   endfor
   if index(args, 'raw') < 0
     call flagship#uniq(path)
