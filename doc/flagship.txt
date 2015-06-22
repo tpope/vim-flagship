@@ -1,4 +1,4 @@
-*flagship.txt*  Continuously updated session files
+*flagship.txt*  Configurable and extensible tab line and status line
 
 Author:  Tim Pope <http://tpo.pe/>
 Repo:    https://github.com/tpope/vim-flagship
