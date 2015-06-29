@@ -480,7 +480,10 @@ function! flagship#setup(...) abort
     endif
   endif
   if !exists('g:tablabel') && !exists('g:tabprefix')
-    if &showtabline == 1
+    redir => blame
+    silent verbose set showtabline?
+    redir END
+    if &showtabline == 1 && blame !~# "\t"
       set showtabline=2
     endif
     if exists('&guitablabel') && empty(&guitablabel)
