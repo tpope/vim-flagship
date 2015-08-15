@@ -1,7 +1,7 @@
 {
   "vim_script_nr": 5199,
   "name": "flagship",
-  "version": "1.0",
+  "version": "1.1",
   "author": "Tim Pope <http://tpo.pe/>",
   "repository" : {
     "type": "git",
