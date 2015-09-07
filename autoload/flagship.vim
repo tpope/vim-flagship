@@ -276,10 +276,13 @@ function! flagship#enter() abort
 endfunction
 
 function! flagship#winleave() abort
-  let id = tabpagenr().'-'.winnr()
-  if tabpagenr().'-'.winnr() !=# get(s:, 'mark', '')
-    return
-  elseif !exists('*haslocaldir') || haslocaldir()
+  if tabpagenr().'-'.winnr() ==# get(s:, 'mark', '')
+    call flagship#record()
+  endif
+endfunction
+
+function! flagship#record() abort
+  if !exists('*haslocaldir') || haslocaldir()
     let w:flagship_cwd = getcwd()
   else
     unlet! w:flagship_cwd
