@@ -276,17 +276,49 @@ function! flagship#enter() abort
 endfunction
 
 function! flagship#winleave() abort
-  if tabpagenr().'-'.winnr() ==# get(s:, 'mark', '')
-    call flagship#record()
-  endif
-endfunction
-
-function! flagship#record() abort
-  if !exists('*haslocaldir') || haslocaldir()
+  let id = tabpagenr().'-'.winnr()
+  if tabpagenr().'-'.winnr() !=# get(s:, 'mark', '')
+    return
+  elseif !exists('*haslocaldir') || haslocaldir()
     let w:flagship_cwd = getcwd()
   else
     unlet! w:flagship_cwd
     let g:flagship_cwd = getcwd()
+  endif
+  let cwds = g:flagship_cwd
+  for t in range(1, tabpagenr('$'))
+    for w in range(1, tabpagewinnr(t, '$'))
+      let cwds .= "\n" . gettabwinvar(t, w, 'flagship_cwd')
+    endfor
+  endfor
+  let g:FlagshipCwds = cwds
+endfunction
+
+function! flagship#session_load_post() abort
+  if &sessionoptions =~ 'sesdir'
+    let g:flagship_cwd = fnamemodify(v:this_session, ':h')
+  endif
+  if &sessionoptions =~# 'globals' && exists('g:FlagshipCwds')
+    let cwds = split(g:FlagshipCwds, "\n", 1)
+    let dir = remove(cwds, 0)
+    let wins = 0
+    for t in range(1, tabpagenr('$'))
+      let wins += tabpagewinnr(t, '$')
+    endfor
+    if wins !=# len(cwds)
+      return
+    endif
+    if &sessionoptions =~# 'curdir'
+      let g:flagship_cwd = dir
+    endif
+    for t in range(1, tabpagenr('$'))
+      for w in range(1, tabpagewinnr(t, '$'))
+        let dir = remove(cwds, 0)
+        if !empty(dir)
+          call settabwinvar(t, w, 'flagship_cwd', dir)
+        endif
+      endfor
+    endfor
   endif
 endfunction
 

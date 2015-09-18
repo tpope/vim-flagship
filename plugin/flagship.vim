@@ -13,9 +13,5 @@ endif
 augroup flagship
   autocmd!
   autocmd WinEnter,VimEnter * call flagship#enter()
-  autocmd SessionLoadPost   *
-        \ if &sessionoptions =~# 'sesdir' |
-        \   let g:flagship_cwd = fnamemodify(v:this_session, ':h') |
-        \ endif |
-        \ call flagship#record()
+  autocmd SessionLoadPost   * call flagship#session_load_post()
 augroup END
