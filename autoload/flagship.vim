@@ -103,7 +103,7 @@ endfunction
 " Returns v:servername if present, or @hostname() when sshed.  This is the
 " default tab prefix.
 function! flagship#id() abort
-  return v:servername . (empty($SSH_TTY) ? '': '@'.hostname())
+  return v:servername . (empty($SSH_TTY) ? '': '@'.substitute(hostname(), '\..*', '', ''))
 endfunction
 
 " Returns "Help" for help buffers and the filetype otherwise.
