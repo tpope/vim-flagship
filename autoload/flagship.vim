@@ -182,7 +182,11 @@ function! flagship#cwd(...) abort
   let args = copy(a:000)
   let gcwd = exists('*haslocaldir') ? get(g:, 'flagship_cwd', '') : getcwd()
   if a:0 > 1 && a:1 && a:2
-    let path = gettabwinvar(a:1, a:2, 'flagship_cwd')
+    if !exists('g:flagship_no_getcwd_local') && has('patch-7.4.1126')
+      let path = getcwd(a:2, a:1)
+    else
+      let path = gettabwinvar(a:1, a:2, 'flagship_cwd')
+    endif
     let path = empty(path) ? gcwd : path
     let buf = bufname(tabpagebuflist(a:1)[a:2-1])
   elseif a:0 && a:1 is# 0
