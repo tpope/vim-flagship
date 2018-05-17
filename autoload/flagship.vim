@@ -201,7 +201,7 @@ function! flagship#cwd(...) abort
     call remove(args, 0)
   endwhile
   if index(args, 'raw') < 0
-    let path = s:cwdpresent(path, index(args, 'relative') >= 0)
+    let path = s:cwdpresent(path)
   endif
   if index(args, 'shorten') >= 0
     let path = pathshorten(path)
@@ -259,14 +259,10 @@ function! s:locatepath(path, paths) abort
   return [parent, path]
 endfunction
 
-function! s:cwdpresent(dir, relative) abort
+function! s:cwdpresent(dir) abort
   let parents = map(split(&cdpath, ','), 'expand(v:val)')
   let dir = a:dir
   call filter(parents, '!empty(v:val)')
-  if a:relative
-    call insert(parents, gcwd)
-    let dir = (dir ==# gcwd) ? '.' : dir
-  endif
   let dir = s:locatepath(dir, parents)[1]
   return substitute(dir, '^'.escape(expand('~'), '\'), '\~', '')
 endfunction
