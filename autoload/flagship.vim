@@ -267,6 +267,18 @@ function! s:cwdpresent(dir) abort
   return substitute(dir, '^'.escape(expand('~'), '\'), '\~', '')
 endfunction
 
+function! flagship#filename() abort
+  let f = @%
+  let ns = substitute(matchstr(f, '^\a\a\+\ze:'), '^\a', '\u&', 'g')
+  if len(ns) && exists('*' . ns . 'Path')
+    try
+      let f = {ns}Path(f)
+    catch
+    endtry
+  endif
+  return fnamemodify(f, ':~:.')
+endfunction
+
 unlet! s:did_setup
 function! flagship#enter() abort
   let s:mark = tabpagenr().'-'.winnr()
@@ -419,6 +431,7 @@ function! flagship#statusline(...) abort
     let s .= '%=' . (&ruler ? ' '.rulerformat : '')
   endif
   let s = s:in('winnr()=='.winnr().'?'.tabpagenr().':-'.winnr()).s.s:in(0)
+  let s = substitute(s, '%-\=\d*\.\=\d*\zsf', '{flagship#filename()}', 'g')
   return substitute(s, '%=', '\=s:flags("file").s:flags("buffer")."%=".s:flags("window",-1)', '')
 endfunction
 
