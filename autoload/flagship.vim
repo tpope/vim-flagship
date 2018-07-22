@@ -270,7 +270,12 @@ endfunction
 function! flagship#filename() abort
   let f = @%
   let ns = substitute(matchstr(f, '^\a\a\+\ze:'), '^\a', '\u&', 'g')
-  if len(ns) && exists('*' . ns . 'Path')
+  if len(ns) && exists('*' . ns . 'Real')
+    try
+      let f = {ns}Real(f)
+    catch
+    endtry
+  elseif len(ns) && exists('*' . ns . 'Path')
     try
       let f = {ns}Path(f)
     catch
