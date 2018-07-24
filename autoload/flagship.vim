@@ -497,7 +497,7 @@ function! flagship#flags_for(type) abort
         let flag = '%'.Hl.'*'.flag.'%*'
       elseif Hl ==? 'ignore'
         continue
-      else
+      elseif !empty(Hl)
         let flag = '%#'.Hl.'#'.flag.'%*'
       endif
     endif
