@@ -262,7 +262,7 @@ endfunction
 function! s:cwdpresent(dir) abort
   let parents = map(split(&cdpath, ','), 'expand(v:val)')
   let dir = a:dir
-  call filter(parents, '!empty(v:val)')
+  call filter(parents, '!empty(v:val) && v:val !=# expand("~")')
   let dir = s:locatepath(dir, parents)[1]
   return substitute(dir, '^'.escape(expand('~'), '\'), '\~', '')
 endfunction
