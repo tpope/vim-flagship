@@ -267,7 +267,26 @@ function! s:cwdpresent(dir) abort
   return substitute(dir, '^'.escape(expand('~'), '\'), '\~', '')
 endfunction
 
-function! flagship#filename() abort
+function! s:cpath(path, ...) abort
+  if exists('+fileignorecase') && &fileignorecase
+    let path = tolower(a:path)
+  else
+    let path = a:path
+  endif
+  let path = tr(path, s:slash(), '/')
+  return a:0 ? path ==# s:cpath(a:1) : path
+endfunction
+
+function! flagship#filename(...) abort
+  if &buftype ==# 'quickfix'
+    return '[Quickfix List]'
+  elseif &buftype =~# '^\%(nofile\|acwrite\|terminal\)$'
+    return empty(@%) ? '[Scratch]' : @%
+  elseif empty(@%)
+    return '[No Name]'
+  elseif &buftype ==# 'help'
+    return fnamemodify(@%, ':t')
+  endif
   let f = @%
   let ns = substitute(matchstr(f, '^\a\a\+\ze:'), '^\a', '\u&', 'g')
   if len(ns) && exists('*' . ns . 'Real')
@@ -275,13 +294,16 @@ function! flagship#filename() abort
       let f = {ns}Real(f)
     catch
     endtry
-  elseif len(ns) && exists('*' . ns . 'Path')
-    try
-      let f = {ns}Path(f)
-    catch
-    endtry
   endif
-  return fnamemodify(f, ':~:.')
+  let cwd = getcwd()
+  let home = expand('~')
+  if s:cpath((f . '/')[0 : len(cwd)], cwd . '/')
+    let f = f[len(cwd) + 1 : -1]
+    let f = len(f) ? f : '.'
+  elseif len(home) && s:cpath((f . '/')[0 : len(home)], home . '/')
+    let f = '~' . f[len(home) : -1]
+  endif
+  return f
 endfunction
 
 unlet! s:did_setup
