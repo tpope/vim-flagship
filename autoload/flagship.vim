@@ -180,7 +180,7 @@ endfunction
 " zero as both arguments to get the global working directory (ignoring the
 " current window).  Will return a path relative to 'cdpath' when possible;
 " pass 'raw' as an additional argument to disable this.  Pass 'shorten' to
-" call pathshorten() on the result.
+" call a variant of pathshorten() on the result.
 function! flagship#cwd(...) abort
   call flagship#winleave()
   let args = copy(a:000)
@@ -208,7 +208,7 @@ function! flagship#cwd(...) abort
     let path = s:cwdpresent(path)
   endif
   if index(args, 'shorten') >= 0
-    let path = pathshorten(path)
+    let path = matchstr(path, '^[^\/]*') . pathshorten(matchstr(path, '[\/].*'))
   endif
   return path
 endfunction
