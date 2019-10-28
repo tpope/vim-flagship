@@ -421,11 +421,15 @@ endfunction
 function! flagship#tablabels() abort
   let s = ''
 
-  for t in range(1, tabpagenr('$'))
+  let lasttabpagenr = tabpagenr('$')
+  for t in range(1, lasttabpagenr)
     let hi = t == tabpagenr() ? 'TabLineSel' : 'TabLine'
     let v:lnum = t
     let label = s:tablabel(t, flagship#tablabel())
     let s .= '%#'.hi.'#%'.t.'T'.s:in(t).' '.s:hinorm(label, hi).' '
+    if t != lasttabpagenr
+      let s .= '%#TabLineFill#'.g:tabinfix
+    endif
   endfor
 
   return s . '%#TabLineFill#%T'.s:in()
