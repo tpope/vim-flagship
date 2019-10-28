@@ -569,6 +569,9 @@ function! flagship#setup(...) abort
   if !exists('g:tabprefix')
     let g:tabprefix = "%{flagship#id()}"
   endif
+  if !exists('g:tabinfix')
+    let g:tabinfix = ""
+  endif
   if !empty(g:tablabel)
     set tabline=%!flagship#tabline()
     if exists('&guitablabel')
