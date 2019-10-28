@@ -428,7 +428,7 @@ function! flagship#tablabels() abort
     let label = s:tablabel(t, flagship#tablabel())
     let s .= '%#'.hi.'#%'.t.'T'.s:in(t).' '.s:hinorm(label, hi).' '
     if t != lasttabpagenr
-      let s .= '%#TabLineFill#'.g:tabinfix
+      let s .= '%#TabLineFill#%T'.g:tabinfix
     endif
   endfor
 
