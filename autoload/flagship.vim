@@ -597,7 +597,11 @@ function! flagship#setup(...) abort
       return call(g:Hoist, a:000)
     endfunction
     if exists('#User#Flags')
-      doautocmd User Flags
+      if v:version >= 704 || (v:version == 703 && has('patch442'))
+        doautocmd <nomodeline> User Flags
+      else
+        doautocmd User Flags
+      endif
     endif
     for [k, v] in items(s:new_flags)
       call map(sort(v), 'v:val[1:-1]')
