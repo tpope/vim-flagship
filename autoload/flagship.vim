@@ -295,7 +295,10 @@ function! flagship#filename(...) abort
   let ns = substitute(matchstr(f, '^\a\a\+\ze:'), '^\a', '\u&', 'g')
   if len(ns) && exists('*' . ns . 'Real')
     try
-      let f = {ns}Real(f)
+      let f2 = {ns}Real(f)
+      if !empty(f2)
+        let f = f2
+      endif
     catch
     endtry
   endif
