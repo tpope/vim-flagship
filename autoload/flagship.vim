@@ -510,7 +510,7 @@ function! flagship#flags_for(type) abort
   for [F, opts; rest] in exists('s:flags') ? get(s:flags, a:type, []) : []
     let str = join([F])
     unlet! F Hl
-    if str =~# get(g:, 'flagship_skip', '0\&1')
+    if !empty(get(g:, 'flagship_skip', '')) && str =~# g:flagship_skip
       let flag = ''
     elseif str =~# '^\%(\h\|<SNR>\)[[:alnum:]_#]*$' && exists('*'.str)
       let flag = '%{flagship#call('.string(str).')}'
