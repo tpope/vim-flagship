@@ -594,7 +594,6 @@ function! flagship#setup(...) abort
   let s:new_flags = {}
   let modelines = &modelines
   try
-    let &modelines = 0
     let g:Hoist = function('flagship#_hoist')
     function! Hoist(...) abort
       return call(g:Hoist, a:000)
@@ -603,6 +602,7 @@ function! flagship#setup(...) abort
       if v:version >= 704 || (v:version == 703 && has('patch442'))
         doautocmd <nomodeline> User Flags
       else
+        let &modelines = 0
         doautocmd User Flags
       endif
     endif
@@ -613,7 +613,9 @@ function! flagship#setup(...) abort
     let s:flags = s:new_flags
     lockvar! s:flags
   finally
-    let &modelines = modelines
+    if &modelines != modelines
+      let &modelines = modelines
+    endif
     unlet! s:new_flags g:Hoist
     if exists('*Hoist')
       delfunction Hoist
