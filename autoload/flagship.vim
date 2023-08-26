@@ -133,11 +133,22 @@ function! flagship#tabbufnr(...) abort
   return tab > 0 ? tabpagebuflist(v:lnum)[tabpagewinnr(v:lnum)-1] : 0
 endfunction
 
-" Returns a string consisting of one plus sign for each
-" tabs if v:lnum is zero.
+" Returns a string consisting of one plus sign for each modified buffer and
+" one exclamation point for each terminal buffer in the given tab number.
+" If no tab number is given, use the tab number in v:lnum.
 function! flagship#tabmodified(...) abort
-  let cnt = flagship#tabcountbufvar('&modified', a:0 ? a:1 : v:lnum)
-  return repeat('+', cnt)
+  let tab = a:0 ? a:1 : v:lnum
+  let str = ''
+  for tab in tab ? [tab] : range(1, tabpagenr('$'))
+    for buf in tabpagebuflist(tab)
+      if getbufvar(buf, '&buftype') ==# 'terminal'
+        let str .= '!'
+      elseif getbufvar(buf, '&modified')
+        let str .= '+'
+      endif
+    endfor
+  endfor
+  return str
 endfunction
 
 " Return the number of times a given buffer variable is nonempty for the given
