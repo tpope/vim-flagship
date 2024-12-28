@@ -523,6 +523,10 @@ function! flagship#flags_for(type) abort
     unlet! F Hl
     if !empty(get(g:, 'flagship_skip', '')) && str =~# g:flagship_skip
       let flag = ''
+    elseif str =~# '^function('
+      let flag = '%{flagship#call('.str.')}'
+    elseif str =~# '^<lambda>\d\+$'
+      let flag = '%{flagship#call(function('.string(str).'))}'
     elseif str =~# '^\%(\h\|<SNR>\)[[:alnum:]_#]*$' && exists('*'.str)
       let flag = '%{flagship#call('.string(str).')}'
     elseif str =~# '^%!'
