@@ -8,7 +8,7 @@ customizable by the user and extensible by other plugins.
 Copy and paste for [pathogen.vim](https://github.com/tpope/vim-pathogen):
 
     cd ~/.vim/bundle
-    git clone git://github.com/tpope/vim-flagship.git
+    git clone https://github.com/tpope/vim-flagship.git
     vim -u NONE -c "helptags vim-flagship/doc" -c q
 
 While not strictly required, I highly recommend the following options:
