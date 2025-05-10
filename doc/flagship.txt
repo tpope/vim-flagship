@@ -46,7 +46,7 @@ There are four supported scopes:
 Flag        Default display position ~
 "buffer"    left of the status line split
 "window"    right of the status line split
-"tab"       end of the tab label
+"tabpage"   end of the tab label
 "global"    end of the tab prefix
 
 Generally you will want to use "buffer" or "global".  The "window" scope is
